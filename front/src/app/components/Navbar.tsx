@@ -3,7 +3,7 @@ import Link from "next/link";
 
 const Navbar = () => {
   return (
-    <nav className="bg-card-bg border-secondary-text flex w-full items-center justify-between border-b-[1px] p-3">
+    <nav className="bg-card-bg flex h-16 w-full items-center justify-between p-3">
       <Link
         href={"/"}
         className="bg-highlight-blue rounded-md px-6 py-2 font-medium text-white"

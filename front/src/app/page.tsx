@@ -4,7 +4,7 @@ import VideoCard from "./components/VideoCard";
 
 export default function Home() {
   return (
-    <div className="flex w-full flex-col gap-3 p-2">
+    <div className="flex min-h-full w-full flex-col gap-3 p-2">
       <MainVideo />
       <section className="bg-card-bg rounded-xl">
         <p className="text-primary-text py-3 pl-3 text-xl font-medium">

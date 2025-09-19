@@ -6,10 +6,17 @@
   --color-primary-text: #1d1d1f;
   --color-secondary-text: #8a8a8e;
   --color-highlight-blue: #2196f3;
+  --color-gray: #a9a9a9;
 }
 
 body {
-  height: 100dvh;
+  min-height: 100dvh;
   margin: 0;
   padding: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+* {
+  box-sizing: border-box;
 }
