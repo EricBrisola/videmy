@@ -14,16 +14,16 @@ export const metadata: Metadata = {
   description: "Página principal da aplicação Videmy",
 };
 
-export default function RootLayout({
-  children,
-}: Readonly<{
+type Props = Readonly<{
   children: React.ReactNode;
-}>) {
+}>;
+
+export default function RootLayout({ children }: Props) {
   return (
     <html lang="en">
       <body className={`${roboto.variable} antialiased`}>
         <Navbar />
-        <section className="bg-main-bg h-full w-full">{children}</section>
+        <main className="bg-main-bg flex w-full flex-1">{children}</main>
       </body>
     </html>
   );

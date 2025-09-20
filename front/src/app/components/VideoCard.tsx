@@ -21,7 +21,6 @@ const VideoCard = () => {
             width={15}
             height={15}
             alt="play-btn"
-            className="h-1/2 w-1/2"
           />
         </Link>
       </article>

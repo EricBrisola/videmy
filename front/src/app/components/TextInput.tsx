@@ -1,8 +1,24 @@
 import { TextInputProps } from "@/types/textInputProps";
 
-const TextInput = ({ name, placeholder, value }: TextInputProps) => {
+const TextInput = ({
+  name,
+  placeholder,
+  id,
+  onChange,
+  value,
+}: TextInputProps) => {
   return (
-    <input type="text" placeholder={placeholder} name={name} value={value} />
+    <label htmlFor={id} className="flex w-full flex-col gap-3">
+      <p className="leading-none font-medium">{placeholder}</p>
+      <input
+        className="border-gray focus:border-highlight-blue w-full rounded-md border-[1px] px-4 py-3 outline-none"
+        type="text"
+        name={name}
+        id={id}
+        onChange={onChange}
+        value={value}
+      />
+    </label>
   );
 };
 
