@@ -38,7 +38,7 @@ export default function UploadForm() {
       className="bg-card-bg flex w-[18rem] flex-col items-center justify-center gap-3 rounded-lg"
       onSubmit={handleSubmit}
     >
-      <section className="flex w-64 flex-col items-center justify-center gap-3 p-4">
+      <section className="flex w-[17rem] flex-col items-center justify-center gap-3 p-4">
         <TextInput
           name="title"
           placeholder="Título"
