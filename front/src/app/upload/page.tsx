@@ -1,4 +1,10 @@
+import { Metadata } from "next";
 import UploadForm from "../components/UploadForm";
+
+export const metadata: Metadata = {
+  title: "Videmy | Upload",
+  description: "Página de upload",
+};
 
 export default function Page() {
   return (

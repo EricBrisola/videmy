@@ -1,6 +1,11 @@
-import Image from "next/image";
 import MainVideo from "./components/MainVideo";
 import VideoCard from "./components/VideoCard";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Videmy | Home",
+  description: "Página principal",
+};
 
 export default function Home() {
   return (

@@ -35,7 +35,7 @@ export default function UploadForm() {
 
   return (
     <form
-      className="bg-card-bg flex w-[18rem] flex-col items-center justify-center gap-3 rounded-lg"
+      className="bg-card-bg flex w-[18rem] flex-col items-center justify-center gap-3 rounded-lg shadow-md"
       onSubmit={handleSubmit}
     >
       <section className="flex w-[17rem] flex-col items-center justify-center gap-3 p-4">
