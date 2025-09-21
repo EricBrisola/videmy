@@ -10,8 +10,8 @@ const roboto = Roboto({
 });
 
 export const metadata: Metadata = {
-  title: "Videmy | Home",
-  description: "Página principal da aplicação Videmy",
+  title: "Videmy",
+  description: "Aplicação Videmy para o acervo de vídeos didáticos",
 };
 
 type Props = Readonly<{
