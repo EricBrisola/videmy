@@ -1,12 +1,23 @@
 {
   "dependencies": {
-    "express": "^5.1.0"
+    "express": "^5.1.0",
+    "google-auth-library": "^10.3.0",
+    "googleapis": "^160.0.0",
+    "multer": "^2.0.2",
+    "pg": "^8.16.3"
   },
   "devDependencies": {
     "@types/express": "^5.0.3",
+    "@types/multer": "^2.0.0",
     "@types/node": "^24.5.2",
+    "@types/pg": "^8.15.5",
     "ts-node": "^10.9.2",
     "typescript": "^5.9.2"
+  },
+  "scripts": {
+    "build": "tsc",
+    "start": "node --env-file=.env dist/server.js",
+    "dev": "npm run build && npm run start"
   },
   "type": "module"
 }
