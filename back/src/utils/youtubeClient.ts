@@ -89,5 +89,41 @@ export default class YoutubeClient {
     return null;
   };
 
-  uploadVideo = async (): Promise<void> => {};
+  initiateVideoUpload = async (formInfos: {
+    title: string;
+    description: string;
+    videoSize: number;
+    videoType: string;
+  }): Promise<string | null> => {
+    const authenticatedClient = this.oauthClient;
+
+    const request = {
+      method: "POST",
+      url: "https://www.googleapis.com/upload/youtube/v3/videos?uploadType=resumable&part=snippet,status",
+      headers: {
+        "X-Upload-Content-Length": `${formInfos.videoSize}`,
+        "X-Upload-Content-Type": formInfos.videoType,
+      },
+      data: {
+        snippet: {
+          title: formInfos.title,
+          description: formInfos.description,
+        },
+        status: {
+          privacyStatus: "unlisted",
+        },
+      },
+    };
+
+    try {
+      const response = await authenticatedClient.request(request);
+
+      if (response && response.headers) {
+        return response.headers.get("Location");
+      }
+    } catch (error) {
+      console.log(error);
+    }
+    return null;
+  };
 }

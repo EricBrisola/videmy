@@ -2,19 +2,77 @@
 
 import { useState } from "react";
 import TextInput from "./TextInput";
-import { formData } from "@/types/formData";
+import { FormData } from "@/types/formData";
+
+import uploadVideoChunks from "@/utils/uploadVideoChunks";
+import startUpload from "@/utils/startUpload";
 
 export default function UploadForm() {
-  const [formData, SetFormData] = useState<formData>({
+  const [formData, SetFormData] = useState<FormData>({
     title: "",
     authors: "",
     description: "",
     video: null,
   });
 
-  const handleSubmit = (ev: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (ev: React.FormEvent<HTMLFormElement>) => {
+    // ev.preventDefault();
+    // console.log(formData);
+
+    // try {
+    //   if (
+    //     formData.video &&
+    //     formData.authors &&
+    //     formData.title &&
+    //     formData.description
+    //   ) {
+    //     const uploadUrl = await startUpload(formData.video, {
+    //       title: formData.title,
+    //       description: `${formData.authors} | ${formData.description}`,
+    //     });
+
+    //     if (uploadUrl) {
+    //       await uploadVideoChunks(uploadUrl, formData.video);
+    //     }
+    //   }
+    // } catch (error) {
+    //   if (error instanceof Error) {
+    //     throw new Error(error.message);
+    //   }
+    //   throw new Error("Erro desconhecido!");
+    // }
+
     ev.preventDefault();
-    console.log(formData);
+
+    if (!formData.video || !formData.title || !formData.description) {
+      alert("Por favor, preencha todos os campos.");
+      return;
+    }
+
+    try {
+      console.log("--- Iniciando tentativa única de upload ---");
+
+      const uploadUrl = await startUpload(formData.video, {
+        title: formData.title,
+        description: `${formData.authors || ""} | ${formData.description}`,
+      });
+
+      const videoData = await uploadVideoChunks(uploadUrl, formData.video);
+
+      if (videoData) {
+        console.log("ID do vídeo:", videoData.id);
+        alert("Vídeo enviado com sucesso!");
+      } else {
+        throw new Error("O processo de upload não foi concluído com sucesso.");
+      }
+    } catch (error) {
+      console.error("A tentativa de upload falhou:", error);
+      if (error instanceof Error) {
+        alert(`Erro no upload: ${error.message}`);
+      } else {
+        alert("Ocorreu um erro desconhecido durante o upload.");
+      }
+    }
   };
 
   const handleVideoChange = (ev: React.ChangeEvent<HTMLInputElement>) => {
@@ -84,7 +142,7 @@ export default function UploadForm() {
             id="description"
           ></textarea>
         </label>
-        <button className="bg-highlight-blue mt-1 w-full rounded-md px-6 py-2 font-medium text-white">
+        <button className="bg-highlight-blue mt-1 w-full rounded-md px-6 py-2 font-medium text-white outline-none">
           Publicar
         </button>
       </section>

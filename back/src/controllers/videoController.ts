@@ -1,7 +1,6 @@
 import type { Video } from "../repositories/VideoRepository.js";
 import { VideoService } from "../services/videoService.js";
 import type { Request, Response } from "express";
-import YoutubeClient from "../utils/youtubeClient.js";
 
 export class VideoController {
   private videoService: VideoService;
@@ -94,4 +93,28 @@ export class VideoController {
   //     }
   //   }
   // };
+
+  initializeUpload = async (req: Request, res: Response): Promise<Response> => {
+    const { title, description, videoSize, videoType } = req.body;
+
+    try {
+      if (!title || !description || !videoSize || !videoType) {
+        return res.status(400).json({ message: "Preencha todos os campos!" });
+      }
+
+      const uploadUrl = await this.videoService.getUploadUrl({
+        title,
+        description,
+        videoSize,
+        videoType,
+      });
+      if (!uploadUrl) {
+        throw new Error("Erro ao obter URL!");
+      }
+
+      return res.status(200).json({ uploadUrl });
+    } catch (error) {
+      return res.status(500).json({ message: "Falaha ao iniciar upload!" });
+    }
+  };
 }

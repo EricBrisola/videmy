@@ -68,5 +68,13 @@ export class VideoService {
     return null;
   };
 
-  saveVideoData = async (video: Video): Promise<void> => {};
+  getUploadUrl = async (formInfos: {
+    title: string;
+    description: string;
+    videoSize: number;
+    videoType: string;
+  }): Promise<string | null> => {
+    const uploadUrl = await this.youtubeClient.initiateVideoUpload(formInfos);
+    return uploadUrl ?? null;
+  };
 }

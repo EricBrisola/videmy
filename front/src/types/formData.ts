@@ -1,4 +1,4 @@
-export type formData = {
+export type FormData = {
   title: string;
   authors: string;
   description: string;
