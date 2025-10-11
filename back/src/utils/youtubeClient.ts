@@ -1,3 +1,4 @@
+import type { GaxiosResponse } from "googleapis-common";
 import { google, youtube_v3 } from "googleapis";
 
 export default class YoutubeClient {
@@ -26,23 +27,23 @@ export default class YoutubeClient {
     });
   }
 
-  giveToken = async (): Promise<string | null> => {
-    const token = await this.oauthClient.getAccessToken();
-    if (token && token.token) {
-      return token.token;
-    }
-    return null;
-  };
+  // giveToken = async (): Promise<string | null> => {
+  //   const token = await this.oauthClient.getAccessToken();
+  //   if (token && token.token) {
+  //     return token.token;
+  //   }
+  //   return null;
+  // };
 
-  gerarRefreshToken = async (): Promise<string | null> => {
-    const { tokens } = await this.oauthClient.getToken(
-      "4/0AVGzR1AfWutibg6yiYff-XrJrt-J047bZX2aLkL1lGlROWCbbRrngUjLYy0G6paKJVVLRw"
-    );
-    if (tokens && tokens.refresh_token) {
-      return tokens.refresh_token;
-    }
-    return null;
-  };
+  // gerarRefreshToken = async (): Promise<string | null> => {
+  //   const { tokens } = await this.oauthClient.getToken(
+  //     "4/0AVGzR1AfWutibg6yiYff-XrJrt-J047bZX2aLkL1lGlROWCbbRrngUjLYy0G6paKJVVLRw"
+  //   );
+  //   if (tokens && tokens.refresh_token) {
+  //     return tokens.refresh_token;
+  //   }
+  //   return null;
+  // };
 
   getAllVideosFromPlaylist = async (): Promise<
     youtube_v3.Schema$PlaylistItem[] | null
@@ -125,5 +126,41 @@ export default class YoutubeClient {
       console.log(error);
     }
     return null;
+  };
+
+  checkUploadStatus = async (
+    uploadUrl: string,
+    videoSize: number
+  ): Promise<youtube_v3.Schema$Video | null> => {
+    console.log("[Backend] Verificando status final do upload em:", uploadUrl);
+
+    const authenticatedClient = this.oauthClient;
+
+    try {
+      const statusResponse: GaxiosResponse<youtube_v3.Schema$Video> =
+        await authenticatedClient.request({
+          method: "PUT",
+          url: uploadUrl,
+          headers: {
+            "Content-Range": `bytes */${videoSize}`,
+          },
+        });
+
+      if (statusResponse.status === 200 || statusResponse.status === 201) {
+        return statusResponse.data;
+      }
+
+      console.log(
+        "[Backend] Verificação indicou que o upload não foi concluído. Status:",
+        statusResponse.status
+      );
+      return null;
+    } catch (error) {
+      console.error(
+        "[Backend] Erro ao tentar verificar o status do upload:",
+        error
+      );
+      return null;
+    }
   };
 }

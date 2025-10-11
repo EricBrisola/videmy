@@ -8,20 +8,23 @@ export class VideoRepositoryPostgres implements VideoRepository {
     this.db = db;
   }
 
-  async create(video: Video, videoId: string): Promise<void> {
+  async create(video: Video): Promise<void> {
     const client: PoolClient = await this.db.connect();
     const query: string = `INSERT INTO 
-    videos (id, title, description, url) 
-    VALUES ($1, $2, $3, $4)`;
+    videos (id, title, description, url, defaultThumbnail, mediumThumbnail, highThumbnail) 
+    VALUES ($1, $2, $3, $4, $5, $6, $7)`;
 
     try {
       await client.query("BEGIN");
 
       await client.query(query, [
-        videoId,
+        video.id,
         video.title,
         video.description,
         video.url,
+        video.defaultThumbnail,
+        video.mediumThumbnail,
+        video.highThumbnail,
       ]);
 
       const authors: string[] = video.authors.split(",");
@@ -29,21 +32,21 @@ export class VideoRepositoryPostgres implements VideoRepository {
       for (const author of authors) {
         await client.query(
           "INSERT INTO authors (name, video_id) VALUES ($1, $2)",
-          [author.trim(), videoId]
+          [author.trim(), video.id]
         );
       }
 
       await client.query("COMMIT");
     } catch (error) {
       await client.query("ROLLBACK");
-      throw new Error("Fail to complete transaction");
+      throw new Error("Falha em completar transação!");
     } finally {
       client.release();
     }
   }
 
   async findAll(): Promise<QueryResult<any>> {
-    const query: string = `SELECT v.id, v.title, v.description, v.url, v.removed, STRING_AGG(a.name, ',') AS authors 
+    const query: string = `SELECT v.id, v.title, v.description, v.url, v.removed, v.defaultThumbnail, v.mediumThumbnail, v.highThumbnail, STRING_AGG(a.name, ',') AS authors 
     FROM 
       videos AS v 
     JOIN 
@@ -61,7 +64,7 @@ export class VideoRepositoryPostgres implements VideoRepository {
   }
 
   async findById(id: string): Promise<QueryResult<any>> {
-    const query: string = `SELECT v.id, v.title, v.description, v.url, v.removed, STRING_AGG(a.name, ',') AS authors 
+    const query: string = `SELECT v.id, v.title, v.description, v.url, v.removed, v.defaultThumbnail, v.mediumThumbnail, v.highThumbnail, STRING_AGG(a.name, ',') AS authors 
     FROM 
      videos AS v
     JOIN 

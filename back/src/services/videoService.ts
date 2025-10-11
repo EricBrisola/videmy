@@ -3,6 +3,7 @@ import { VideoRepositoryPostgres } from "../repositories/VideoRepositoryPostgres
 import pool from "../db/pool.js";
 import type { QueryResult } from "pg";
 import YoutubeClient from "../utils/youtubeClient.js";
+import type { youtube_v3 } from "googleapis";
 
 export class VideoService {
   private videoRepositoryPostgres;
@@ -30,6 +31,9 @@ export class VideoService {
           description: row.description,
           url: row.url,
           removed: row.removed,
+          defaultThumbnail: row.smallThumbnail,
+          mediumThumbnail: row.mediumThumbnail,
+          highThumbnail: row.highThumbnail,
         };
       });
 
@@ -57,6 +61,9 @@ export class VideoService {
         description: response.rows[0].description,
         url: response.rows[0].url,
         removed: response.rows[0].removed,
+        defaultThumbnail: response.rows[0].smallThumbnail,
+        mediumThumbnail: response.rows[0].mediumThumbnail,
+        highThumbnail: response.rows[0].highThumbnail,
       };
 
       return video;
@@ -76,5 +83,42 @@ export class VideoService {
   }): Promise<string | null> => {
     const uploadUrl = await this.youtubeClient.initiateVideoUpload(formInfos);
     return uploadUrl ?? null;
+  };
+
+  getUploadStatus = async (
+    uploadUrl: string,
+    videoSize: number
+  ): Promise<youtube_v3.Schema$Video | null> => {
+    const videoData: youtube_v3.Schema$Video | null =
+      await this.youtubeClient.checkUploadStatus(uploadUrl, videoSize);
+
+    return videoData;
+  };
+
+  saveVideoData = async (
+    videoId: string,
+    videoTitle: string,
+    videoDesc: string,
+    videoThumbnails: {
+      defaultThumb: string;
+      mediumThumb: string;
+      highThumb: string;
+    }
+  ) => {
+    const authors: string = videoDesc.split("|")[0] ?? "Sem autor";
+    const description: string = videoDesc.split("|")[1] ?? "Sem descrição";
+
+    const video: Video = {
+      id: videoId,
+      title: videoTitle,
+      authors: authors,
+      description: description,
+      url: `https://www.youtube.com/watch?v=${videoId}`,
+      removed: false,
+      defaultThumbnail: videoThumbnails.defaultThumb,
+      mediumThumbnail: videoThumbnails.mediumThumb,
+      highThumbnail: videoThumbnails.highThumb,
+    };
+    await this.videoRepositoryPostgres.create(video);
   };
 }
