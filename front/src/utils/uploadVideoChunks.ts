@@ -1,4 +1,5 @@
 import { YouTubeVideoResource } from "@/types/uploadYoutubeTypes";
+import verifyWithBackendTheUpload from "./verifyWithBackendTheUpload";
 
 const uploadVideoChunks = async (
   locationUrl: string,
@@ -11,19 +12,20 @@ const uploadVideoChunks = async (
     const end: number = Math.min(start + chunkSize, video.size);
     const chunk: Blob = video.slice(start, end);
 
-    const endByte = start + chunk.size - 1;
-
     try {
       const res: Response = await fetch(locationUrl, {
         method: "PUT",
         headers: {
           "Content-Length": `${chunk.size}`,
-          "Content-Range": `bytes ${start}-${endByte}/${video.size}`,
+          "Content-Range": `bytes ${start}-${end - 1}/${video.size}`,
         },
         body: chunk,
       });
 
       if (res.status === 308) {
+        console.log(
+          `Chunk de ${start / 1024 / 1024} a ${end / 1024 / 1024}MB enviado. Status: 308.`,
+        );
         start = end;
       } else if (res.ok) {
         const videoData = await res.json();
@@ -35,7 +37,10 @@ const uploadVideoChunks = async (
       console.error("Erro de rede ao enviar chunk.", error);
 
       if (end === video.size) {
-        const videoData = await verifyUploadStatus(locationUrl, video.size);
+        const videoData = await verifyWithBackendTheUpload(
+          locationUrl,
+          video.size,
+        );
         if (videoData) {
           return videoData;
         }
@@ -47,46 +52,5 @@ const uploadVideoChunks = async (
 
   return null;
 };
-
-async function verifyUploadStatus(
-  uploadUrl: string,
-  videoSize: number,
-): Promise<YouTubeVideoResource | null> {
-  console.log(
-    "A confirmação final falhou. Tentando verificar o status do upload...",
-  );
-
-  for (let i = 0; i < 2; i++) {
-    try {
-      const statusResponse = await fetch(uploadUrl, {
-        method: "PUT",
-        headers: {
-          "Content-Range": `bytes */${videoSize}`,
-        },
-      });
-
-      if (statusResponse.ok) {
-        console.log("Verificação bem-sucedida! O upload foi concluído.");
-        const videoData = await statusResponse.json();
-        return videoData;
-      }
-
-      if (statusResponse.status === 308) {
-        console.log(
-          "Verificação indicou que o upload ainda não foi concluído.",
-        );
-        return null;
-      }
-    } catch (error) {
-      console.error(`Tentativa de verificação ${i + 1} falhou.`, error);
-      await new Promise((resolve) => setTimeout(resolve, 3000));
-    }
-  }
-
-  console.error(
-    "Não foi possível verificar o status do upload após várias tentativas.",
-  );
-  return null;
-}
 
 export default uploadVideoChunks;

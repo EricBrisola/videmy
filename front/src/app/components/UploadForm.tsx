@@ -8,7 +8,7 @@ import uploadVideoChunks from "@/utils/uploadVideoChunks";
 import startUpload from "@/utils/startUpload";
 
 export default function UploadForm() {
-  const [formData, SetFormData] = useState<FormData>({
+  const [formData, setFormData] = useState<FormData>({
     title: "",
     authors: "",
     description: "",
@@ -16,32 +16,6 @@ export default function UploadForm() {
   });
 
   const handleSubmit = async (ev: React.FormEvent<HTMLFormElement>) => {
-    // ev.preventDefault();
-    // console.log(formData);
-
-    // try {
-    //   if (
-    //     formData.video &&
-    //     formData.authors &&
-    //     formData.title &&
-    //     formData.description
-    //   ) {
-    //     const uploadUrl = await startUpload(formData.video, {
-    //       title: formData.title,
-    //       description: `${formData.authors} | ${formData.description}`,
-    //     });
-
-    //     if (uploadUrl) {
-    //       await uploadVideoChunks(uploadUrl, formData.video);
-    //     }
-    //   }
-    // } catch (error) {
-    //   if (error instanceof Error) {
-    //     throw new Error(error.message);
-    //   }
-    //   throw new Error("Erro desconhecido!");
-    // }
-
     ev.preventDefault();
 
     if (!formData.video || !formData.title || !formData.description) {
@@ -50,8 +24,6 @@ export default function UploadForm() {
     }
 
     try {
-      console.log("--- Iniciando tentativa única de upload ---");
-
       const uploadUrl = await startUpload(formData.video, {
         title: formData.title,
         description: `${formData.authors || ""} | ${formData.description}`,
@@ -60,8 +32,17 @@ export default function UploadForm() {
       const videoData = await uploadVideoChunks(uploadUrl, formData.video);
 
       if (videoData) {
-        console.log("ID do vídeo:", videoData.id);
-        alert("Vídeo enviado com sucesso!");
+        console.log("dados do vídeo:", videoData);
+        alert(
+          `Vídeo: https://www.youtube.com/watch?v=${videoData.id}\nFeito por: ${videoData?.snippet.localized.description.split("|")[0]}`,
+        );
+
+        setFormData({
+          title: "",
+          authors: "",
+          description: "",
+          video: null,
+        });
       } else {
         throw new Error("O processo de upload não foi concluído com sucesso.");
       }
@@ -76,7 +57,7 @@ export default function UploadForm() {
   };
 
   const handleVideoChange = (ev: React.ChangeEvent<HTMLInputElement>) => {
-    SetFormData((prev) => ({
+    setFormData((prev) => ({
       ...prev,
       [ev.target.name]: ev.target.files?.[0] ?? null,
     }));
@@ -85,7 +66,7 @@ export default function UploadForm() {
   const handleChange = (
     ev: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
-    SetFormData((prev) => ({
+    setFormData((prev) => ({
       ...prev,
       [ev.target.name]: ev.target.value,
     }));

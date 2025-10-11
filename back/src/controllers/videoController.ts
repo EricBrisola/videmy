@@ -45,55 +45,6 @@ export class VideoController {
     return res.status(404).json({ message: "Erro desconhecido buscar vídeo!" });
   };
 
-  // POST /videos/
-  create = async (req: Request, res: Response): Promise<void> => {
-    try {
-      const { title, authors, description } = req.body;
-      const video = req.file;
-
-      if (!title || !authors || !description || !video) {
-        res
-          .status(400)
-          .json({ message: "Informações incompletas para o envio do vídeo" });
-        return;
-      }
-
-      const newVideo: Video = {
-        id: "",
-        title: title,
-        authors: authors,
-        description: description,
-        url: "",
-        removed: false,
-      };
-
-      //TODO: falta inserir o video, como vai fazer?
-
-      //await this.videoService.uploadVideoToYoutube(newVideo);
-
-      res.status(201).json({ message: "Vídeo enviado com sucesso!" });
-    } catch (error: unknown) {
-      if (error instanceof Error) {
-        res.status(400).json({ message: error.message });
-      } else {
-        res.status(404).json({ message: "Erro desconhecido ao upar vídeo!" });
-      }
-    }
-  };
-
-  // token = async (req: Request, res: Response): Promise<void> => {
-  //   try {
-  //     const accessToken = await this.youtubeClient.giveToken();
-  //     res.status(200).json({ accessToken });
-  //   } catch (error) {
-  //     if (error instanceof Error) {
-  //       res.status(400).json({ message: error.message });
-  //     } else {
-  //       res.status(404).json({ message: "Erro desconhecido" });
-  //     }
-  //   }
-  // };
-
   initializeUpload = async (req: Request, res: Response): Promise<Response> => {
     const { title, description, videoSize, videoType } = req.body;
 
@@ -114,7 +65,56 @@ export class VideoController {
 
       return res.status(200).json({ uploadUrl });
     } catch (error) {
-      return res.status(500).json({ message: "Falaha ao iniciar upload!" });
+      return res.status(500).json({ message: "Falha ao iniciar upload!" });
+    }
+  };
+
+  verifyUploadStatus = async (
+    req: Request,
+    res: Response
+  ): Promise<Response> => {
+    try {
+      const { uploadUrl, videoSize } = req.body;
+
+      if (!uploadUrl || !videoSize) {
+        return res
+          .status(400)
+          .json({ message: "URL ou tamanho do vídeo são necessários!" });
+      }
+
+      const videoData = await this.videoService.getUploadStatus(
+        uploadUrl,
+        videoSize
+      );
+
+      if (
+        videoData &&
+        videoData.id &&
+        videoData?.snippet?.localized?.title &&
+        videoData?.snippet?.localized?.description &&
+        videoData.snippet.thumbnails
+      ) {
+        const videoThumbnails = videoData.snippet.thumbnails;
+        const defaultThumb = videoThumbnails?.default?.url ?? "";
+        const mediumThumb = videoThumbnails?.default?.url ?? "";
+        const highThumb = videoThumbnails?.default?.url ?? "";
+
+        await this.videoService.saveVideoData(
+          videoData?.id,
+          videoData?.snippet?.localized?.title,
+          videoData?.snippet?.localized?.description,
+          { defaultThumb, mediumThumb, highThumb }
+        );
+        return res.status(200).json(videoData);
+      }
+      return res
+        .status(400)
+        .json({ message: "Upload não encontrado ou não finalizado!" });
+    } catch (error) {
+      console.error("[Controller] Falha ao verificar status do upload:", error);
+      return res
+        .status(500)
+        .json({ message: "Falha interna ao verificar status do upload." });
     }
   };
 }

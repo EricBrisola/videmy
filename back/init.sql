@@ -4,6 +4,9 @@ CREATE TABLE videos (
   description TEXT NOT NULL,
   url VARCHAR(60) NOT NULL UNIQUE,
   removed BOOLEAN DEFAULT FALSE,
+  defaultThumbnail VARCHAR(60) NOT NULL,
+  mediumThumbnail VARCHAR(60) NOT NULL,
+  highThumbnail VARCHAR(60) NOT NULL,
   created_at TIMESTAMP DEFAULT NOW(),
   updated_at TIMESTAMP DEFAULT NOW()
 );
