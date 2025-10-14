@@ -15,8 +15,10 @@ const verifyWithBackendTheUpload = async (
     });
 
     if (response.ok) {
-      const videoData = await response.json();
+      const videoData: YouTubeVideoResource = await response.json();
       console.log("O backend confirmou o sucesso do upload!");
+      console.log(videoData);
+
       return videoData;
     }
     console.error("O backend não conseguiu confirmar o sucesso do upload.");
