@@ -7,7 +7,7 @@ import { FormData } from "@/types/formData";
 import uploadVideoChunks from "@/utils/uploadVideoChunks";
 import startUpload from "@/utils/startUpload";
 
-export default function UploadForm() {
+const UploadForm = () => {
   const [formData, setFormData] = useState<FormData>({
     title: "",
     authors: "",
@@ -129,4 +129,6 @@ export default function UploadForm() {
       </section>
     </form>
   );
-}
+};
+
+export default UploadForm;
