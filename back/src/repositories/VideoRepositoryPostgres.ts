@@ -11,8 +11,8 @@ export class VideoRepositoryPostgres implements VideoRepository {
   async create(video: Video): Promise<void> {
     const client: PoolClient = await this.db.connect();
     const query: string = `INSERT INTO 
-    videos (id, title, description, url, defaultThumbnail, mediumThumbnail, highThumbnail) 
-    VALUES ($1, $2, $3, $4, $5, $6, $7)`;
+    videos (id, title, description, url) 
+    VALUES ($1, $2, $3, $4)`;
 
     try {
       await client.query("BEGIN");
@@ -22,9 +22,6 @@ export class VideoRepositoryPostgres implements VideoRepository {
         video.title,
         video.description,
         video.url,
-        video.defaultThumbnail,
-        video.mediumThumbnail,
-        video.highThumbnail,
       ]);
 
       const authors: string[] = video.authors.split(",");
@@ -46,14 +43,18 @@ export class VideoRepositoryPostgres implements VideoRepository {
   }
 
   async findAll(): Promise<QueryResult<any>> {
-    const query: string = `SELECT v.id, v.title, v.description, v.url, v.removed, v.defaultThumbnail, v.mediumThumbnail, v.highThumbnail, STRING_AGG(a.name, ',') AS authors 
+    const query: string = `SELECT v.id, v.title, v.description, v.url, v.removed, STRING_AGG(a.name, ',') AS authors 
     FROM 
       videos AS v 
     JOIN 
       authors AS a 
-    ON v.id = a.video_id 
+    ON v.id = a.video_id
+    WHERE v.removed = FALSE
     GROUP BY 
-      v.id`;
+      v.id
+    ORDER BY
+      v.created_at 
+    DESC`;
 
     try {
       const data = await this.db.query(query);
@@ -64,7 +65,7 @@ export class VideoRepositoryPostgres implements VideoRepository {
   }
 
   async findById(id: string): Promise<QueryResult<any>> {
-    const query: string = `SELECT v.id, v.title, v.description, v.url, v.removed, v.defaultThumbnail, v.mediumThumbnail, v.highThumbnail, STRING_AGG(a.name, ',') AS authors 
+    const query: string = `SELECT v.id, v.title, v.description, v.url, v.removed, STRING_AGG(a.name, ',') AS authors 
     FROM 
      videos AS v
     JOIN 
@@ -72,6 +73,8 @@ export class VideoRepositoryPostgres implements VideoRepository {
     ON v.id = a.video_id
     WHERE 
       v.id = $1
+    AND
+      v.removed = FALSE
     GROUP BY 
       v.id`;
 

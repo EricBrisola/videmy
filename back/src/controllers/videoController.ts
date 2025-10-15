@@ -91,19 +91,12 @@ export class VideoController {
         videoData &&
         videoData.id &&
         videoData?.snippet?.localized?.title &&
-        videoData?.snippet?.localized?.description &&
-        videoData.snippet.thumbnails
+        videoData?.snippet?.localized?.description
       ) {
-        const videoThumbnails = videoData.snippet.thumbnails;
-        const defaultThumb = videoThumbnails?.default?.url ?? "";
-        const mediumThumb = videoThumbnails?.default?.url ?? "";
-        const highThumb = videoThumbnails?.default?.url ?? "";
-
         await this.videoService.saveVideoData(
           videoData?.id,
           videoData?.snippet?.localized?.title,
-          videoData?.snippet?.localized?.description,
-          { defaultThumb, mediumThumb, highThumb }
+          videoData?.snippet?.localized?.description
         );
         return res.status(200).json(videoData);
       }

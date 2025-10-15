@@ -5,7 +5,4 @@ export type Video = {
   description: string;
   url: string;
   removed: boolean;
-  defaultThumbnail: string;
-  mediumThumbnail: string;
-  highThumbnail: string;
 };
