@@ -20,3 +20,29 @@ body {
 * {
   box-sizing: border-box;
 }
+
+.ableButtonLayout {
+  background-color: var(--color-highlight-blue);
+  margin-top: calc(var(--spacing) * 1);
+  width: 100%;
+  cursor: pointer;
+  border-radius: var(--radius-md);
+  padding-inline: calc(var(--spacing) * 6);
+  padding-block: calc(var(--spacing) * 2);
+  font-weight: var(--font-weight-medium);
+  color: #fff;
+  outline-style: none;
+}
+
+.disableButtonLayout {
+  background-color: var(--color-gray);
+  margin-top: calc(var(--spacing) * 1);
+  width: 100%;
+  cursor: progress;
+  border-radius: var(--radius-md);
+  padding-inline: calc(var(--spacing) * 6);
+  padding-block: calc(var(--spacing) * 2);
+  font-weight: var(--font-weight-medium);
+  color: #fff;
+  outline-style: none;
+}

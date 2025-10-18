@@ -4,6 +4,7 @@ import verifyWithBackendTheUpload from "./verifyWithBackendTheUpload";
 const uploadVideoChunks = async (
   locationUrl: string,
   video: File,
+  getUploadProgress: (progress: number) => void,
 ): Promise<YouTubeVideoResource | null> => {
   const chunkSize: number = 8 * 1024 * 1024; // 8MB
   let start: number = 0;
@@ -26,6 +27,13 @@ const uploadVideoChunks = async (
         console.log(
           `Chunk de ${start / 1024 / 1024} a ${end / 1024 / 1024}MB enviado. Status: 308.`,
         );
+
+        const progressPercentage = Math.round((start / video.size) * 100);
+
+        if (getUploadProgress) {
+          getUploadProgress(progressPercentage);
+        }
+
         start = end;
       } else if (res.ok) {
         const videoData = await res.json();
