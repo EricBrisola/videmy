@@ -42,7 +42,7 @@ const UploadForm = () => {
       setIsLoading(true);
       const uploadUrl = await startUpload(formData.video, {
         title: formData.title,
-        description: `${formData.authors || ""} | ${formData.description}`,
+        description: `${formData.authors} | ${formData.description}`,
       });
       setIsLoading(false);
       const videoData = await uploadVideoChunks(
@@ -120,7 +120,7 @@ const UploadForm = () => {
             value={formData.authors}
           />
           <article className="flex w-full flex-col gap-3">
-            <p className="leading-none font-medium">Vídeo</p>
+            <p className="leading-none font-medium lg:text-lg">Vídeo</p>
             <label
               htmlFor="video_input"
               className="border-gray flex h-[3.25rem] items-center justify-center rounded-md border-[1px] border-dashed p-2"
@@ -130,7 +130,7 @@ const UploadForm = () => {
                   {formData.video.name.slice(0, 25)}
                 </p>
               ) : (
-                <p className="font-medium">Escolha seu arquivo aqui</p>
+                <p className="font-medium lg:text-lg">Escolha seu vídeo aqui</p>
               )}
               <input
                 type="file"
@@ -144,7 +144,7 @@ const UploadForm = () => {
             </label>
           </article>
           <label htmlFor="description" className="flex w-full flex-col gap-3">
-            <p className="leading-none font-medium">Descrição</p>
+            <p className="leading-none font-medium lg:text-lg">Descrição</p>
             <textarea
               name="description"
               className="border-gray focus:border-highlight-blue h-24 resize-none rounded-md border-[1px] px-2 py-2 outline-none"
@@ -155,7 +155,7 @@ const UploadForm = () => {
             ></textarea>
           </label>
           <button
-            className={`${isSubmitButtonDisabled ? "disableButtonLayout" : "ableButtonLayout"} `}
+            className={`${isSubmitButtonDisabled ? "disableButtonLayout" : "ableButtonLayout"} lg:text-lg`}
             disabled={isSubmitButtonDisabled}
           >
             Publicar
@@ -164,7 +164,7 @@ const UploadForm = () => {
       </form>
       {isModalOpen && (
         <Modal>
-          <article className="bg-main-bg flex flex-col items-center gap-2 rounded-lg p-5">
+          <article className="bg-main-bg mx-4 flex flex-col items-center gap-2 rounded-lg p-5">
             {isLoading ? (
               <Loader animation={loadingAnimation} />
             ) : (

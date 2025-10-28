@@ -94,7 +94,8 @@ export class VideoService {
     videoDesc: string
   ) => {
     const authors: string = videoDesc.split("|")[0] ?? "Sem autor";
-    const description: string = videoDesc.split("|")[1] ?? "Sem descrição";
+    const description: string =
+      videoDesc.split("|")[1]?.trimStart() ?? "Sem descrição";
 
     const video: Video = {
       id: videoId,

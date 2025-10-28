@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 export default function Page() {
   return (
     <section className="flex min-h-full w-full flex-col items-center justify-center gap-7">
-      <p className="w-72 text-center text-xl font-normal">
+      <p className="w-72 text-center text-xl font-normal lg:text-2xl">
         Contribua publicando o vídeo do seu trabalho
       </p>
       <UploadForm />

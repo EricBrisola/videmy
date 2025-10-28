@@ -27,7 +27,8 @@ const VideoThumbnail = ({ videoId, altText }: VideoThumbProps) => {
       src={imageSource}
       alt={altText}
       sizes="(max-width: 768px) 100vw, 50vw"
-      fill
+      width={1920}
+      height={1080}
       className="object-cover"
     />
   );

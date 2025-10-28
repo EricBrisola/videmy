@@ -10,9 +10,15 @@ const Navbar = () => {
       >
         Home
       </Link>
-      <div className="h-10 w-10">
-        <Image src={"/icon.png"} alt="videmy-icon" width={250} height={250} />
-      </div>
+
+      <Image
+        src={"/icon.png"}
+        alt="videmy-icon"
+        width={512}
+        height={512}
+        className="aspect-square min-[320]:w-10 min-[425px]:w-12 md:w-14 xl:w-16"
+      />
+      {/*TODO: talvez fazer uma logo */}
       <Link
         href={"/upload"}
         className="bg-highlight-blue rounded-md px-6 py-2 font-medium text-white"
