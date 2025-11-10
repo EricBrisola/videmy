@@ -10,6 +10,7 @@ import ModalController from "@/utils/ModalController";
 import Modal from "./Modal";
 import Loader from "./Loader";
 import loadingAnimation from "@/app/assets/loading-animation.json";
+import { toaster } from "@/utils/toaster";
 
 const UploadForm = () => {
   const [formData, setFormData] = useState<FormData>({
@@ -32,7 +33,8 @@ const UploadForm = () => {
     ev.preventDefault();
 
     if (!formData.video || !formData.title || !formData.description) {
-      alert("Por favor, preencha todos os campos.");
+      //alert("Por favor, preencha todos os campos.");
+      toaster.warningMessage("Por favor, preencha todos os campos.");
       return;
     }
 
@@ -53,9 +55,12 @@ const UploadForm = () => {
 
       if (videoData) {
         console.log("dados do vídeo:", videoData);
-        alert(
-          `Vídeo: https://www.youtube.com/watch?v=${videoData.id}\nFeito por: ${videoData?.snippet.localized.description.split("|")[0]}`,
+        toaster.successMessage(
+          `Link: https://www.youtube.com/watch?v=${videoData.id}\nFeito por: ${videoData?.snippet.localized.description.split("|")[0]}\n`,
         );
+        // alert(
+        //   `Vídeo: https://www.youtube.com/watch?v=${videoData.id}\nFeito por: ${videoData?.snippet.localized.description.split("|")[0]}`,
+        // );
 
         setFormData({
           title: "",
@@ -67,11 +72,10 @@ const UploadForm = () => {
         throw new Error("O processo de upload não foi concluído com sucesso.");
       }
     } catch (error) {
-      console.error("A tentativa de upload falhou:", error);
       if (error instanceof Error) {
-        alert(`Erro no upload: ${error.message}`);
+        toaster.errorMessage(`${error.message}`);
       } else {
-        alert("Ocorreu um erro desconhecido durante o upload.");
+        toaster.errorMessage("Ocorreu um erro desconhecido durante o upload.");
       }
     } finally {
       closeModal();

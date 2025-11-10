@@ -18,10 +18,8 @@ const startUpload = async (
   const response = await fetch("http://localhost:4000/videos/start", request);
 
   if (!response.ok) {
-    const errorBody = await response.text();
-    throw new Error(
-      `O servidor respondeu com um erro: ${response.status} ${errorBody}`,
-    );
+    const errorBody = await response.json();
+    throw new Error(`Código: ${response.status} - ${errorBody.message}`);
   }
 
   const data: { uploadUrl: string } = await response.json();
