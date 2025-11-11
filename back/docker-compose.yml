@@ -7,3 +7,15 @@ services:
       - "5432:5432"
     volumes:
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+      - postgres_data:/var/lib/postgresql/data
+  backend:
+    container_name: videmy_backend
+    build:
+      context: .
+    ports:
+      - "4000:4000"
+    env_file: ./.env
+    depends_on:
+      - db
+volumes:
+  postgres_data:
