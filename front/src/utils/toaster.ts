@@ -15,13 +15,13 @@ export const toaster: Toaster = {
       hideProgressBar: false,
       closeOnClick: false,
       pauseOnHover: true,
-      draggable: true,
       progress: undefined,
       theme: "colored",
       transition: Zoom,
       style: {
         width: "320px",
         whiteSpace: "pre-line",
+        touchAction: "none",
       },
     });
   },
@@ -33,12 +33,12 @@ export const toaster: Toaster = {
       hideProgressBar: false,
       closeOnClick: false,
       pauseOnHover: true,
-      draggable: true,
       progress: undefined,
       theme: "colored",
       transition: Zoom,
       style: {
         width: "320px",
+        touchAction: "none",
       },
     });
   },
@@ -50,12 +50,12 @@ export const toaster: Toaster = {
       hideProgressBar: false,
       closeOnClick: false,
       pauseOnHover: true,
-      draggable: true,
       progress: undefined,
       theme: "colored",
       transition: Zoom,
       style: {
         width: "320px",
+        touchAction: "none",
       },
     });
   },

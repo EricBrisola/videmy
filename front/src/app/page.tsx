@@ -49,13 +49,13 @@ export default async function Home() {
         )}
       </section>
       <div className="flex items-center justify-center">
-        <section className="bg-card-bg rounded-xl min-[330px]:w-full md:w-[90%] xl:w-4/5">
+        <section className="bg-card-bg h-full w-full rounded-xl min-[330px]:w-full md:w-[90%] xl:w-4/5">
           <p className="text-primary-text py-3 pl-3 text-xl font-medium">
             Demais tutoriais
           </p>
 
-          <article className="xs grid grid-cols-2 gap-2 p-3 max-[425px]:grid-cols-1 lg:grid-cols-3">
-            {videos && videos?.length >= 1 ? (
+          <article className="grid grid-cols-2 gap-2 p-3 max-[425px]:grid-cols-1 lg:grid-cols-3">
+            {otherVideos && otherVideos?.length >= 1 ? (
               otherVideos?.map((video: Video) => {
                 return (
                   <VideoCard
@@ -68,7 +68,7 @@ export default async function Home() {
                 );
               })
             ) : (
-              <p className="text-center">Sem vídeos</p>
+              <p>Sem vídeos</p>
             )}
           </article>
         </section>
