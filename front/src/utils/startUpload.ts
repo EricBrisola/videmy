@@ -15,7 +15,10 @@ const startUpload = async (
     }),
   };
 
-  const response = await fetch("http://localhost:4000/videos/start", request);
+  const response = await fetch(
+    `${process.env.PUBLIC_API_URL}/videos/start`,
+    request,
+  );
 
   if (!response.ok) {
     const errorBody = await response.json();

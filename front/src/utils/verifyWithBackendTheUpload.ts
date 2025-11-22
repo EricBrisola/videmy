@@ -8,11 +8,14 @@ const verifyWithBackendTheUpload = async (
     "A confirmação final falhou no navegador. Pedindo para o backend verificar...",
   );
   try {
-    const response = await fetch("http://localhost:4000/videos/verify", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ uploadUrl, videoSize }),
-    });
+    const response = await fetch(
+      `${process.env.PUBLIC_API_URL}/videos/verify`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ uploadUrl, videoSize }),
+      },
+    );
 
     if (response.ok) {
       const videoData: YouTubeVideoResource = await response.json();
