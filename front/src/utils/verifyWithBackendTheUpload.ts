@@ -9,7 +9,7 @@ const verifyWithBackendTheUpload = async (
   );
   try {
     const response = await fetch(
-      `${process.env.PUBLIC_API_URL}/videos/verify`,
+      `${process.env.NEXT_PUBLIC_API_URL}/videos/verify`,
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },

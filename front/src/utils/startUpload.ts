@@ -16,12 +16,14 @@ const startUpload = async (
   };
 
   const response = await fetch(
-    `${process.env.PUBLIC_API_URL}/videos/start`,
+    `${process.env.NEXT_PUBLIC_API_URL}/videos/start`,
     request,
   );
 
   if (!response.ok) {
     const errorBody = await response.json();
+    console.log(errorBody);
+
     throw new Error(`Código: ${response.status} - ${errorBody.message}`);
   }
 
