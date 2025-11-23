@@ -1,3 +1,4 @@
+const API_URL = import.meta.env.VITE_NEXT_PUBLIC_API_URL;
 const startUpload = async (
   videoFile: File,
   metadata: { title: string; description: string },
@@ -15,10 +16,7 @@ const startUpload = async (
     }),
   };
 
-  const response = await fetch(
-    `${process.env.NEXT_PUBLIC_API_URL}/videos/start`,
-    request,
-  );
+  const response = await fetch(`${API_URL}/videos/start`, request);
 
   if (!response.ok) {
     const errorBody = await response.json();
