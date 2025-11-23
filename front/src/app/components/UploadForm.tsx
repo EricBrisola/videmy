@@ -11,6 +11,7 @@ import Modal from "./Modal";
 import Loader from "./Loader";
 import loadingAnimation from "@/app/assets/loading-animation.json";
 import { toaster } from "@/utils/toaster";
+import { reRenderHome } from "../actions/reRenderAction";
 
 const UploadForm = () => {
   const [formData, setFormData] = useState<FormData>({
@@ -58,9 +59,6 @@ const UploadForm = () => {
         toaster.successMessage(
           `Link: https://www.youtube.com/watch?v=${videoData.id}\nFeito por: ${videoData?.snippet.localized.description.split("|")[0]}\n`,
         );
-        // alert(
-        //   `Vídeo: https://www.youtube.com/watch?v=${videoData.id}\nFeito por: ${videoData?.snippet.localized.description.split("|")[0]}`,
-        // );
 
         setFormData({
           title: "",
@@ -68,6 +66,7 @@ const UploadForm = () => {
           description: "",
           video: null,
         });
+        await reRenderHome();
       } else {
         throw new Error("O processo de upload não foi concluído com sucesso.");
       }
